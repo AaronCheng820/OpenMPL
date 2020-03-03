@@ -21,7 +21,7 @@ int main(int argc, char** argv)
 
     char buf[256];
     SimpleMPL::mplSPrint(SimpleMPL::kINFO, buf, "program takes %%t seconds CPU, %%w seconds real\n");
-	boost::timer::auto_cpu_timer timer (buf);
+	//boost::timer::auto_cpu_timer timer (buf);
 
 	mpl.run(argc, argv);
 

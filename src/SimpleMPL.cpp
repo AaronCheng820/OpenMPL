@@ -125,7 +125,7 @@ void SimpleMPL::read_gds()
 {
     char buf[256];
     mplSPrint(kINFO, buf, "reading input files takes %%t seconds CPU, %%w seconds real\n");
-	boost::timer::auto_cpu_timer timer (buf);
+	//boost::timer::auto_cpu_timer timer (buf);
 	mplPrint(kINFO, "Reading input file %s\n", m_db->input_gds().c_str());
 	// read input gds file 
 	GdsReader reader (*m_db);
@@ -141,7 +141,7 @@ void SimpleMPL::write_gds()
 {
     char buf[256];
     mplSPrint(kINFO, buf, "writing output file takes %%t seconds CPU, %%w seconds real\n");
-	boost::timer::auto_cpu_timer timer (buf);
+	//boost::timer::auto_cpu_timer timer (buf);
 	if (m_db->output_gds().empty()) 
 	{
         mplPrint(kWARN, "Output file not specified, no file generated\n");
@@ -411,8 +411,8 @@ void SimpleMPL::solve()
     // skip if no uncolored layer 
     if (m_db->parms.sUncolorLayer.empty())
         return;
-	boost::timer::cpu_timer total_timer;
-	total_timer.start();
+	//boost::timer::cpu_timer total_timer;
+	//total_timer.start();
 	if (m_db->vPatternBbox.empty())
 	{
         mplPrint(kWARN, "No patterns found in specified layers\n");
@@ -494,8 +494,8 @@ void SimpleMPL::solve()
     // 	}
     // }
 
-	boost::timer::cpu_timer t;
-	t.start();
+	//boost::timer::cpu_timer t;
+	//t.start();
 	// thread number controled by user option 
 // #ifdef _OPENMP
 // #pragma omp parallel for schedule(dynamic)
@@ -506,8 +506,8 @@ void SimpleMPL::solve()
     for (uint32_t comp_id = 0; comp_id < m_comp_cnt; ++comp_id)
     {
         // construct a component 
-		boost::timer::cpu_timer t_comp;
-		t_comp.start();
+		//boost::timer::cpu_timer t_comp;
+		//t_comp.start();
         std::vector<uint32_t>::iterator itBgn = m_vVertexOrder.begin()+m_vBookmark[comp_id];
         std::vector<uint32_t>::iterator itEnd = (comp_id+1 != m_comp_cnt)? m_vVertexOrder.begin()+m_vBookmark[comp_id+1] : m_vVertexOrder.end();
         // solve component 
@@ -522,13 +522,13 @@ void SimpleMPL::solve()
             std::ofstream myfile,color_time,total_time;
             myfile.open ("record.txt", std::ofstream::app);
             color_time.open("result_w_stitch.txt",std::ofstream::app);
-            myfile << t.format(2, "color time %ts(%p%), %ws real")<<"\n";
-            myfile << total_timer.format(2, "total time %ts(%p%), %ws real")<<"\n";
+            //myfile << t.format(2, "color time %ts(%p%), %ws real")<<"\n";
+            //myfile << total_timer.format(2, "total time %ts(%p%), %ws real")<<"\n";
             if(m_db->algo() == AlgorithmTypeEnum::ILP_GUROBI)
             {
                 color_time<<"\\\\\n"<<m_db->input_gds();
             }
-            color_time<<t.format(3, "&  %w");
+            //color_time<<t.format(3, "&  %w");
             myfile.close();
             color_time.close();
         }
@@ -538,15 +538,15 @@ void SimpleMPL::solve()
             myfile.open ("record.txt", std::ofstream::app);
             color_time.open("color_wo_stitch.txt",std::ofstream::app);
             total_time.open("total_wo_stitch.txt",std::ofstream::app);
-            myfile << t.format(2, "color time %ts(%p%), %ws real")<<"\n";
-            myfile << total_timer.format(2, "total time %ts(%p%), %ws real")<<"\n";
+            //myfile << t.format(2, "color time %ts(%p%), %ws real")<<"\n";
+            //myfile << total_timer.format(2, "total time %ts(%p%), %ws real")<<"\n";
             if(m_db->algo() == AlgorithmTypeEnum::ILP_GUROBI)
             {
                 color_time<<"\\\\\n"<<m_db->input_gds();
                 total_time<<"\n"<<m_db->input_gds();
             }
-            color_time<<t.format(2, "& %t  &  %w");
-            total_time<<total_timer.format(2, "& %t  &  %w");
+            //color_time<<t.format(2, "& %t  &  %w");
+            //total_time<<total_timer.format(2, "& %t  &  %w");
             myfile.close();
             color_time.close();
             total_time.close();
@@ -1984,8 +1984,8 @@ double SimpleMPL::solve_graph_coloring(uint32_t comp_id, SimpleMPL::graph_type c
         }
 
         //if algorithm is Dancing Link, call it directly
-        boost::timer::cpu_timer comp_timer;
-        comp_timer.start();
+        //boost::timer::cpu_timer comp_timer;
+        //comp_timer.start();
 
         // solve coloring 
         typedef lac::Coloring<graph_type> coloring_solver_type;
@@ -2101,7 +2101,7 @@ double SimpleMPL::solve_graph_coloring(uint32_t comp_id, SimpleMPL::graph_type c
             {
                 std::ofstream myfile;
                 myfile.open("ILP_obj.txt", std::ofstream::app);
-                myfile<<m_db->input_gds().c_str()<<" "<<comp_id<<" "<<sub_comp_id <<" "<<num_vertices(sg)<<" "<<obj_value1<<" "<<comp_timer.format(3,"%w")<<"\n";
+                //myfile<<m_db->input_gds().c_str()<<" "<<comp_id<<" "<<sub_comp_id <<" "<<num_vertices(sg)<<" "<<obj_value1<<" "<<comp_timer.format(3,"%w")<<"\n";
                 myfile.close();
             }
 
