@@ -55,6 +55,44 @@ SimpleMPL::~SimpleMPL()
 {
     if (m_db) delete m_db;
 }
+
+uint32_t SimpleMPL::get_conflict_num()
+{
+
+	int argc = 21;
+	char *argv[21] = {
+    "./",
+    "-shape", "POLYGON",
+    "-in", "./bin/bench/sim_c1.gds",
+    "-out", "benchout/sim_c1_sti.gds",
+    "-coloring_distance", "100",
+    "-uncolor_layer", "1",
+    "-uncolor_layer", "101",
+    "-color_num", "3",
+    "-algo", "BACKTRACK",
+    "-thread_num", "8",
+    "-use_stitch",
+    "-gen_stitch"
+    };
+	this->reset(false);
+	std::ofstream myfile;
+	myfile.open ("record.txt", std::ofstream::app);
+	myfile << argv[4]<<" " << argv[16]<<"\n";
+	myfile.close();
+	this->read_cmd(argc, argv);
+	this->read_gds();
+    if (m_db->parms.record > 1)
+    {
+        std::ofstream myfile_small;
+        myfile_small.open ("small_results.txt", std::ofstream::app);
+        myfile_small << argv[4]<<" " << argv[16]<<"\n";
+        myfile_small.close();
+    }
+	this->solve();
+	uint32_t c_num = conflict_num();
+	this->write_gds();
+	return c_num;
+}
 void SimpleMPL::run(int argc, char** argv)
 {
 

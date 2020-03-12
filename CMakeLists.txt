@@ -14,7 +14,6 @@ if(NOT CMAKE_BUILD_TYPE)
         FORCE)
 endif(NOT CMAKE_BUILD_TYPE)
 message("-- CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
-
 if(NOT CMAKE_CXX_ABI)
     set(CMAKE_CXX_ABI 0 CACHE STRING
         "Choose the value for _GLIBCXX_USE_CXX11_ABI, options are: 0|1."
@@ -45,7 +44,13 @@ if (NOT Boost_FOUND)
 endif (NOT Boost_FOUND)
 message("-- Boost_INCLUDE_DIRS = ${Boost_INCLUDE_DIRS}")
 find_package(Gurobi)
-find_package(OpenMP)
+find_package(OpenMP REQUIRED)
+if (OPENMP_FOUND)
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+endif()
+find_package(pybind11 REQUIRED) 
 
 add_subdirectory(thirdparty)
 add_subdirectory(src)

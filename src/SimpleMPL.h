@@ -49,6 +49,7 @@ class SimpleMPL
 
 		/// top api to solve decomposition
 		void run(int32_t argc, char** argv);
+		uint32_t get_conflict_num();
 		void read_cmd(int32_t argc, char** argv);
 		void read_gds();
 		void write_gds();
