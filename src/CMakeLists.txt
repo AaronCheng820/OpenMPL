@@ -6,6 +6,7 @@ else()
     set(COMPILE_DEFINITIONS "")
 endif()
 
+#find_package(pybind11 REQUIRED) 
 #set(COMPILE_DEFINITIONS -DDEBUG_LIWEI ${COMPILE_DEFINITIONS})
 
 set(LIBS programoptions gdsdb gdsparser gzstream ${Boost_LIBRARIES} ${ZLIB_LIBRARIES})
@@ -46,6 +47,10 @@ file(GLOB SOURCES
 
 include_directories(${LIMBO_SOURCE_DIR} ${Boost_INCLUDE_DIRS})
 add_library(${PROJECT_NAME}_lib STATIC ${SOURCES})
+add_library(openmpl_cpp MODULE binding.cpp)
+target_link_libraries(openmpl_cpp PRIVATE ${PROJECT_NAME}_lib ${LIBS} pybind11::module)
+set_target_properties(openmpl_cpp PROPERTIES PREFIX "${PYTHON_MODULE_PREFIX}"
+                                         SUFFIX "${PYTHON_MODULE_EXTENSION}")
 add_executable(${PROJECT_NAME} main.cpp)
 if(OpenMP_CXX_FOUND)
     target_compile_options(${PROJECT_NAME}_lib PRIVATE ${OpenMP_CXX_FLAGS})
